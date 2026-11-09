@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>M5 — Scroll Film | Concept by Hammad Jawaid</title>
+<meta name="description" content="A scroll-driven film of the BMW M5. Concept project built with GSAP, ScrollTrigger and Lenis.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Hanken+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0b0c0e;--steel:#a9afb7;--bone:#ebe9e4;--red:#e5242b;--d:'Big Shoulders Display',Impact,'Arial Narrow',sans-serif;--b:'Hanken Grotesk',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--ink)}
+html.lenis,html.lenis body{height:auto}.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{color:var(--bone);font:400 17px/1.55 var(--b);overflow-x:hidden}
+#load{position:fixed;inset:0;z-index:99;background:var(--ink);display:grid;place-items:center;transition:opacity .8s,visibility .8s}
+#load.done{opacity:0;visibility:hidden}
+#load b{font:900 clamp(6rem,30vw,22rem);line-height:.8;font-family:var(--d);letter-spacing:-.02em;color:transparent;-webkit-text-stroke:2px var(--steel);background:linear-gradient(var(--bone),var(--bone)) 0 100%/100% 0% no-repeat;-webkit-background-clip:text;background-clip:text;transition:background-size .2s}
+#load small{position:absolute;bottom:8vh;font-size:.9rem;color:var(--steel)}
+.ch{position:relative;height:420vh}.ch.hero{height:600vh}
+.stick{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:#000}
+.stick video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.stick:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(11,12,14,.78),rgba(11,12,14,0) 62%),linear-gradient(0deg,rgba(11,12,14,.6),transparent 40%);pointer-events:none}
+.copy{position:absolute;z-index:2;left:max(6vw,24px);bottom:max(9vh,70px);max-width:34rem;opacity:0}
+.copy h2{font:900 clamp(3.4rem,11vw,9.5rem);font-family:var(--d);line-height:.84;letter-spacing:-.01em;margin-bottom:1rem;overflow:hidden}
+.copy h2 i{display:inline-block;font-style:normal;transform:translateY(110%)}
+.copy p{color:var(--steel);max-width:27rem}
+.tag{display:inline-block;margin-bottom:1rem;font-size:.85rem;color:var(--bone);border-left:3px solid var(--red);padding-left:.7rem}
+.mark{position:absolute;z-index:3;inset:0;display:grid;place-items:center;pointer-events:none;mix-blend-mode:screen}
+.mark b{font:900 clamp(12rem,52vw,48rem);font-family:var(--d);line-height:.8;color:var(--bone);will-change:transform,opacity;letter-spacing:-.03em}
+.mark span{position:absolute;bottom:7vh;font-size:.9rem;color:var(--steel);display:flex;flex-direction:column;align-items:center;gap:.6rem}
+.mark span:after{content:"";width:1px;height:46px;background:linear-gradient(var(--red),transparent);animation:p 1.6s infinite}
+@keyframes p{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+#rail{position:fixed;right:max(2.4vw,14px);top:50%;transform:translateY(-50%);z-index:20;display:flex;flex-direction:column;gap:14px;mix-blend-mode:difference}
+#rail a{display:block;width:9px;height:9px;border:1.5px solid #fff;border-radius:50%;transition:.3s;position:relative}
+#rail a.on{background:#fff;transform:scale(1.5)}
+#rail a:hover:before{content:attr(data-n);position:absolute;right:20px;top:-6px;color:#fff;font-size:.8rem}
+#bar{position:fixed;top:0;left:0;height:3px;width:100%;background:var(--red);transform:scaleX(0);transform-origin:left;z-index:30}
+nav{position:fixed;z-index:20;top:0;left:0;right:0;padding:22px max(6vw,24px);display:flex;justify-content:space-between;font:800 1.3rem var(--d);letter-spacing:.04em;mix-blend-mode:difference;pointer-events:none}
+nav a{color:#fff;text-decoration:none;font:500 .9rem var(--b);pointer-events:auto}
+.specs{min-height:100vh;display:grid;place-content:center;gap:9vh;padding:14vh max(6vw,24px);background:var(--ink)}
+.nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:4vw}
+.nums div{border-top:1px solid #2a2d33;padding-top:1.2rem}
+.nums b{display:block;font:900 clamp(4.5rem,11vw,9rem)/.85 var(--d);color:var(--bone)}
+.nums b u{text-decoration:none;color:var(--red);font-size:.45em;margin-left:.15em}
+.nums span{color:var(--steel)}
+.specs h3{font:900 clamp(2.6rem,7vw,6rem)/.9 var(--d);max-width:14ch}
+footer{padding:0 max(6vw,24px) 7vh;background:var(--ink);color:var(--steel);font-size:.85rem;display:flex;flex-wrap:wrap;gap:1rem 3rem;justify-content:space-between}
+footer a{color:var(--bone)}
+@media (max-width:700px){#rail{display:none}.ch{height:360vh}.stick:after{background:linear-gradient(0deg,rgba(11,12,14,.85),transparent 60%)}}
+@media (prefers-reduced-motion:reduce){.copy{opacity:1}.copy h2 i{transform:none}}
+
+:root{--g:0}
+body{cursor:none}a,button{cursor:none}
+@media (hover:none){body,a,button{cursor:auto}.cur{display:none}}
+.cur{position:fixed;z-index:100;left:0;top:0;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:#fff;mix-blend-mode:difference;pointer-events:none;transition:width .3s,height .3s,margin .3s}
+.cur.big{width:70px;height:70px;margin:-35px 0 0 -35px}
+.grain{position:fixed;inset:-50%;z-index:60;pointer-events:none;opacity:.11;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:gr .6s steps(6) infinite}
+@keyframes gr{0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-3%)}60%{transform:translate(-2%,-1%)}80%{transform:translate(3%,3%)}100%{transform:translate(0,0)}}
+.vig{position:fixed;inset:0;z-index:58;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.65))}
+.lb{position:fixed;left:0;right:0;height:5vh;background:#000;z-index:59;transition:transform 1.2s cubic-bezier(.7,0,.2,1)}
+.lb.t{top:0;transform:translateY(-100%)}.lb.b{bottom:0;transform:translateY(100%)}
+body.go .lb{transform:none}
+#hud{position:fixed;z-index:40;right:max(6vw,24px);bottom:calc(5vh + 20px);text-align:right;font:900 clamp(3rem,7vw,6rem)/.8 var(--d);mix-blend-mode:difference;color:#fff;pointer-events:none}
+#hud small{display:block;font:500 .8rem var(--b);letter-spacing:.1em;margin-top:.5rem}
+#rec{position:fixed;z-index:40;left:max(6vw,24px);top:calc(5vh + 22px);font:500 .85rem var(--b);color:#fff;mix-blend-mode:difference;pointer-events:none;display:flex;gap:.6rem;align-items:center}
+#rec:before{content:"";width:9px;height:9px;border-radius:50%;background:var(--red);animation:bl 1s steps(2) infinite}
+@keyframes bl{50%{opacity:0}}
+.ghost{position:absolute;z-index:1;left:0;top:50%;transform:translateY(-50%);white-space:nowrap;font:900 clamp(14rem,42vw,40rem)/.8 var(--d);color:transparent;-webkit-text-stroke:2px rgba(235,233,228,.28);pointer-events:none;will-change:transform}
+.copy h2,.mark b{text-shadow:calc(var(--g)*-1px) 0 var(--red),calc(var(--g)*1px) 0 #19e3ff}
+.flash{position:fixed;inset:0;background:#fff;z-index:57;opacity:0;pointer-events:none}
+.snd{all:unset;font:500 .9rem var(--b);color:#fff;pointer-events:auto;border:1px solid #fff;padding:.35rem .9rem;border-radius:99px}
+.mq{overflow:hidden;white-space:nowrap;border-block:1px solid #2a2d33;padding:2.2rem 0;margin-inline:-8vw}
+.mq div{display:inline-block;font:900 clamp(4rem,12vw,10rem)/1 var(--d);color:transparent;-webkit-text-stroke:2px var(--steel);animation:mq 22s linear infinite}
+.mq div em{color:var(--red);-webkit-text-stroke:0;font-style:normal;padding:0 .3em}
+@keyframes mq{to{transform:translateX(-50%)}}
+.cta{justify-self:start;display:inline-block;font:900 clamp(2rem,5vw,4rem)/1 var(--d);color:var(--ink);background:var(--bone);padding:1.4rem 2.6rem;text-decoration:none;border-radius:99px;transition:background .3s,color .3s}
+.cta:hover{background:var(--red);color:#fff}
+@media (prefers-reduced-motion:reduce){.grain,.mq div{animation:none}}
+</style>
+</head>
+<body>
+<div id="load"><b id="pct">00</b><small>Loading the film</small></div>
+<div id="bar"></div><div class="cur"></div><div class="grain"></div><div class="vig"></div><div class="lb t"></div><div class="lb b"></div><div class="flash"></div><div id="rec">REC 00:00:00</div><div id="hud"><span id="spd">000</span><small>KM/H</small></div>
+<nav><span>M5</span><button class="snd" id="snd">Sound off</button><a href="https://hammad-developer.vercel.app/" target="_blank" rel="noopener">Built by Hammad Jawaid</a></nav>
+<div id="rail"></div>
+<main id="film"></main>
+
+<section class="specs" id="specs">
+  <div class="mq"><div>V8 TWIN-TURBO<em>/</em>PLUG-IN HYBRID<em>/</em>717 HP<em>/</em>V8 TWIN-TURBO<em>/</em>PLUG-IN HYBRID<em>/</em>717 HP<em>/</em></div></div>
+  <h3>Four doors. Plug-in V8. No apologies.</h3>
+  <div class="nums">
+    <div><b data-n="717">0</b><span>horsepower, combined output</span></div>
+    <div><b data-n="1000">0</b><span>newton-metres of torque</span></div>
+    <div><b data-n="3.5" data-d="1">0</b><span>seconds, 0 to 100 km/h</span></div>
+  </div>
+  <a class="cta" id="cta" href="https://hammad-developer.vercel.app/hire.html" target="_blank" rel="noopener">Hire the developer</a>
+</section>
+<footer>
+  <span>Concept project for portfolio purposes. Not affiliated with or endorsed by BMW. Footage is AI-generated.</span>
+  <span>Design and code: <a href="https://hammad-developer.vercel.app/" target="_blank" rel="noopener">Hammad Jawaid</a> · <a href="https://github.com/hammadjawaiddev" target="_blank" rel="noopener">GitHub</a></span>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+<script>
+const CH=[
+ {f:'hero',n:'Arrival',t:'Out of the fog',p:'It leaves the road behind and walks into the dark. The film starts here.',hero:1},
+ {f:'orbit',n:'Silhouette',t:'Low. Wide. Quiet.',p:'One full lap around the car. Every line is there to move air or hold the road.'},
+ {f:'face',n:'Face',t:'The stare',p:'Slim LED eyes, an illuminated double kidney and an M badge you notice last.'},
+ {f:'stance',n:'Stance',t:'Planted',p:'Black forged-look wheels filling the arches. Big brakes sit behind every spoke.'},
+ {f:'cabin',n:'Cockpit',t:'Step inside',p:'Door open, ambient light low. Everything in the cabin points at the driver.'},
+ {f:'rear',n:'Departure',t:'Four pipes',p:'Red light-bars and a quad exhaust. This is the angle most people will see.'},
+ {f:'finale',n:'Finale',t:'Here it comes',p:'It rolls out of the dark straight at you. Keep scrolling for the numbers.'}
+];
+const $=s=>document.querySelector(s),film=$('#film'),rail=$('#rail');
+CH.forEach((c,i)=>{
+ film.insertAdjacentHTML('beforeend',`<section class="ch ${c.hero?'hero':''}" id="c${i}"><div class="stick"><video muted playsinline preload="auto" poster="assets/${c.f}.jpg"></video>
+ ${c.hero?'<div class="mark"><b>M5</b><span>Scroll</span></div>':''}
+ <div class="ghost">${c.n}</div><div class="copy"><div class="tag">${i+1} / ${CH.length} &nbsp; ${c.n}</div><h2>${c.t.split(' ').map(w=>`<i>${w}&nbsp;</i>`).join('')}</h2><p>${c.p}</p></div></div></section>`);
+ rail.insertAdjacentHTML('beforeend',`<a href="#c${i}" data-n="${c.n}" aria-label="${c.n}"></a>`);
+});
+const vids=[...document.querySelectorAll('video')];
+// Preload every clip fully so scrubbing is instant
+(async()=>{
+ const sizes=new Array(vids.length).fill(1),got=new Array(vids.length).fill(0),pct=$('#pct'),fill=$('#load b');
+ const tick=()=>{const p=Math.round(100*got.reduce((a,b)=>a+b,0)/sizes.reduce((a,b)=>a+b,0));pct.textContent=String(p).padStart(2,'0');fill.style.backgroundSize='100% '+p+'%'};
+ await Promise.all(vids.map(async(v,i)=>{
+  try{const r=await fetch(`assets/${CH[i].f}.mp4`),L=+r.headers.get('content-length')||2.2e6;sizes[i]=L;
+   const rd=r.body.getReader(),parts=[];for(;;){const{done,value}=await rd.read();if(done)break;parts.push(value);got[i]+=value.length;tick()}
+   v.src=URL.createObjectURL(new Blob(parts,{type:'video/mp4'}));
+  }catch(e){v.src=`assets/${CH[i].f}.mp4`}
+  await new Promise(r=>{v.onloadeddata=r;setTimeout(r,4000)});got[i]=sizes[i];tick();
+ }));
+ pct.textContent='100';setTimeout(()=>{$('#load').classList.add('done');init()},350);
+})();
+function init(){
+ gsap.registerPlugin(ScrollTrigger);
+ const rm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+ const lenis=new Lenis({lerp:.085,smoothWheel:!rm});
+ lenis.on('scroll',ScrollTrigger.update);
+ gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0);
+ document.querySelectorAll('#rail a').forEach(a=>a.onclick=e=>{e.preventDefault();lenis.scrollTo(a.getAttribute('href'),{duration:2})});
+ gsap.to('#bar',{scaleX:1,ease:'none',scrollTrigger:{scrub:.3,start:0,end:'max'}});
+ CH.forEach((c,i)=>{
+  const sec=$('#c'+i),v=vids[i],copy=sec.querySelector('.copy'),words=copy.querySelectorAll('h2 i');
+  let target=0;v.pause();
+  // Smooth scrubbing: ease the video time toward the scroll position every frame
+  gsap.ticker.add(()=>{if(!v.duration)return;const d=target-v.currentTime;if(Math.abs(d)>.01)v.currentTime+=d*.22});
+  ScrollTrigger.create({trigger:sec,start:'top top',end:'bottom bottom',scrub:true,onUpdate:s=>{target=s.progress*(v.duration||10)*.999},
+   onToggle:s=>s.isActive&&document.querySelectorAll('#rail a').forEach((a,j)=>a.classList.toggle('on',j===i))});
+  const tl=gsap.timeline({scrollTrigger:{trigger:sec,start:'top top',end:'bottom bottom',scrub:.6}});
+  const s=c.hero?.28:.08;
+  tl.set(copy,{opacity:1},s).fromTo(words,{yPercent:110},{yPercent:0,stagger:.01,duration:.07,ease:'power3.out'},s)
+    .to(copy,{opacity:0,y:-40,duration:.08},.84).to({},{duration:.001},1);
+  if(c.hero)gsap.timeline({scrollTrigger:{trigger:sec,start:'top top',end:'+=70%',scrub:true}})
+    .to('.mark b',{scale:7,opacity:0,ease:'power2.in'}).to('.mark span',{opacity:0},0);
+  // Each clip gently pushes in while pinned
+  gsap.fromTo(v,{scale:1},{scale:1.06,ease:'none',scrollTrigger:{trigger:sec,start:'top top',end:'bottom bottom',scrub:true}});
+ });
+ document.querySelectorAll('.nums b').forEach(b=>{
+  const n=+b.dataset.n,d=+b.dataset.d||0,o={v:0};
+  ScrollTrigger.create({trigger:b,start:'top 85%',once:true,onEnter:()=>gsap.to(o,{v:n,duration:2.2,ease:'power3.out',onUpdate:()=>b.textContent=o.v.toFixed(d)})});
+ });
+ extras(lenis);gsap.from('.specs h3',{y:60,opacity:0,duration:1,scrollTrigger:{trigger:'.specs',start:'top 60%'}});
+}
+
+function extras(lenis){
+ document.body.classList.add('go');
+ const cur=$('.cur'),qx=gsap.quickTo(cur,'x',{duration:.25}),qy=gsap.quickTo(cur,'y',{duration:.25});
+ addEventListener('mousemove',e=>{qx(e.clientX);qy(e.clientY)});
+ document.querySelectorAll('a,button').forEach(a=>{a.addEventListener('mouseenter',()=>cur.classList.add('big'));a.addEventListener('mouseleave',()=>cur.classList.remove('big'))});
+ const cta=$('#cta');cta.addEventListener('mousemove',e=>{const r=cta.getBoundingClientRect();gsap.to(cta,{x:(e.clientX-r.left-r.width/2)*.3,y:(e.clientY-r.top-r.height/2)*.4,duration:.3})});
+ cta.addEventListener('mouseleave',()=>gsap.to(cta,{x:0,y:0,duration:.6,ease:'elastic.out(1,.4)'}));
+ // Ghost words slide sideways while each chapter is pinned
+ document.querySelectorAll('.ch').forEach((sec,i)=>{const g=sec.querySelector('.ghost');
+  gsap.fromTo(g,{x:i%2?'-60%':'10%'},{x:i%2?'10%':'-60%',ease:'none',scrollTrigger:{trigger:sec,start:'top top',end:'bottom bottom',scrub:true}});
+  if(i)ScrollTrigger.create({trigger:sec,start:'top 4%',onEnter:()=>gsap.fromTo('.flash',{opacity:.55},{opacity:0,duration:.5}),onEnterBack:()=>gsap.fromTo('.flash',{opacity:.55},{opacity:0,duration:.5})})});
+ // HUD: speed and timecode follow the scroll
+ const spd=$('#spd'),rec=$('#rec'),pad=n=>String(Math.floor(n)).padStart(2,'0');
+ ScrollTrigger.create({trigger:'#film',start:'top top',end:'bottom bottom',onUpdate:s=>{const p=s.progress;spd.textContent=String(Math.round(305*Math.pow(p,1.4))).padStart(3,'0');const t=p*70;rec.textContent='REC 00:'+pad(t/60)+':'+pad(t%60)}});
+ // Scroll speed splits the colour of headlines
+ let g=0;lenis.on('scroll',({velocity:v})=>{g=Math.min(Math.abs(v)*.8,14);document.documentElement.style.setProperty('--g',g.toFixed(1))});
+ // Optional engine sound that revs with scroll speed
+ let ac,o1,o2,gn,on=0;const b=$('#snd');
+ b.onclick=()=>{on=!on;b.textContent=on?'Sound on':'Sound off';if(!ac){ac=new (window.AudioContext||window.webkitAudioContext)();o1=ac.createOscillator();o2=ac.createOscillator();gn=ac.createGain();const f=ac.createBiquadFilter();f.type='lowpass';f.frequency.value=380;o1.type='sawtooth';o2.type='square';o1.connect(f);o2.connect(f);f.connect(gn);gn.connect(ac.destination);gn.gain.value=0;o1.start();o2.start()}ac.resume()};
+ gsap.ticker.add(()=>{if(!ac)return;const r=48+g*9+lenis.scroll/innerHeight*1.2;o1.frequency.setTargetAtTime(r,ac.currentTime,.12);o2.frequency.setTargetAtTime(r/2,ac.currentTime,.12);gn.gain.setTargetAtTime(on?.05+g*.006:0,ac.currentTime,.15)});
+}
+</script>
+</body>
+</html>
